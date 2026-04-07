@@ -1,0 +1,47 @@
+# -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
+
+PortSystem                  1.0
+
+name                        firefox-esr
+version                     140.9.0esr
+categories                  browsers
+platforms                   macosx
+license                     Mozilla Public License v2.0
+maintainers                 @dive openmaintainer
+description                 A free and open-source web browser developed by the Mozilla Foundation.
+long_description            {*}${description} \
+                            Get the browser that protects what's important. \
+                            No shady privacy policies or back doors for advertisers. \
+                            Just a lightning fast browser that doesn’t sell you out.
+homepage                    https://www.mozilla.org/firefox
+supported_archs             noarch
+use_configure               no
+
+# FIXME: How to extract locale for the current user? MacPorts uses en-US by default
+master_sites                https://download-installer.cdn.mozilla.net/pub/firefox/releases/${version}/mac/en-US/
+distname                    ${name} ${version}
+distfiles                   ${distname}.dmg
+extract.only
+
+checksums
+
+build {}
+
+proc mount-dmg {dmg_path} {
+    global workpath
+    set mountpoint ${workpath}/mountpoint
+    xinstall -d -m 755 ${mountpoint}
+    system "hdiutil mount \"${dmg_path}\" -mountpoint \"${mountpoint}\" -quiet -noverify -noautofsck -noautoopen"
+    return ${mountpoint}
+}
+
+proc unmount-dmg {mountpoint} {
+    system "hdiutil unmount \"${mountpoint}\" -force -quiet"
+}
+
+destroot {
+    set mountpoint [mount-dmg ${distpath}/${distname}.dmg]
+    xinstall -m 0755 -d ${destroot}${applications_dir}
+    copy ${mountpoint}/${name}.app ${destroot}${applications_dir}
+    unmount-dmg ${mountpoint}
+}
