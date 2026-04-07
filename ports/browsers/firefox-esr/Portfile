@@ -5,7 +5,7 @@ PortSystem                  1.0
 name                        firefox-esr
 version                     140.9.0esr
 categories                  browsers
-platforms                   macosx
+platforms                   darwin
 license                     Mozilla Public License v2.0
 maintainers                 @dive openmaintainer
 description                 A free and open-source web browser developed by the Mozilla Foundation.
@@ -19,11 +19,13 @@ use_configure               no
 
 # FIXME: How to extract locale for the current user? MacPorts uses en-US by default
 master_sites                https://download-installer.cdn.mozilla.net/pub/firefox/releases/${version}/mac/en-US/
-distname                    ${name} ${version}
+distname                    Firefox ${version}
 distfiles                   ${distname}.dmg
 extract.only
 
-checksums
+checksums   rmd160 20a5f45a8cbb983c0ecfb683e0a591278d430ddb\
+            sha256 c6ee2b761e9d767c142acae832f8e0c69e111f3ae20ec77cabab7dd3f93e1333\
+            size 134230831
 
 build {}
 
